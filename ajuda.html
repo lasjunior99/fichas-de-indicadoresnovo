@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Ajuda – Sistema de Fichas de Indicadores de Desempenho</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+      line-height: 1.4;
+    }
+    h1, h2, h3 {
+      color: #004d7a;
+    }
+    h1 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+    h2 {
+      font-size: 18px;
+      margin-top: 20px;
+    }
+    h3 {
+      font-size: 15px;
+      margin-top: 10px;
+    }
+    p {
+      margin: 6px 0;
+    }
+    ul, ol {
+      margin-top: 4px;
+      margin-bottom: 8px;
+      padding-left: 20px;
+    }
+    .box {
+      background: #ffffff;
+      border-radius: 4px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 0 4px rgba(0,0,0,0.1);
+    }
+    .tag {
+      display: inline-block;
+      background: #004d7a;
+      color: #fff;
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-right: 4px;
+    }
+    code {
+      background: #eee;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Ajuda do Sistema de Fichas de Indicadores de Desempenho</h1>
+<p>
+  Este sistema foi desenvolvido para apoiar o cadastro estruturado dos indicadores de desempenho,
+  o relacionamento com objetivos estratégicos, o registro de metas anuais e a geração de relatórios
+  para acompanhamento da execução da estratégia.
+</p>
+
+<div class="box">
+  <h2>Visão geral das abas</h2>
+  <ul>
+    <li><span class="tag">GESTOR RESPONSÁVEL</span> Cadastro e edição dos detalhes técnicos dos indicadores sob responsabilidade de cada gestor.</li>
+    <li><span class="tag">ADMIN</span> Administração geral do sistema (gestores, perspectivas, objetivos, indicadores e controle de edição).</li>
+    <li><span class="tag">METAS</span> Cadastro de metas anuais por indicador, definição de faixas de gestão à vista e valores de referência.</li>
+    <li><span class="tag">ORIENTAÇÕES</span> Conceitos e instruções sobre cada campo da ficha de indicadores.</li>
+    <li><span class="tag">RESULTADOS</span> Relatórios consolidados dos indicadores cadastrados, com opções de filtro e exportação.</li>
+  </ul>
+</div>
+
+<div class="box">
+  <h2>1. Aba “GESTOR RESPONSÁVEL”</h2>
+  <p>Nesta aba, cada gestor seleciona seu nome na lista e visualiza os indicadores sob sua responsabilidade.</p>
+  <ol>
+    <li>Selecione o seu nome no campo <strong>“Nome do Gestor Responsável”</strong>.</li>
+    <li>Na tabela de indicadores, clique em <strong>“Preencher / Editar detalhes”</strong> para o indicador desejado.</li>
+    <li>Preencha os campos:
+      <ul>
+        <li><strong>Descrição operacional</strong></li>
+        <li><strong>Fórmula</strong></li>
+        <li><strong>Unidade de medida</strong></li>
+        <li><strong>Fonte de dados</strong></li>
+        <li><strong>Periodicidade</strong></li>
+        <li><strong>Polaridade</strong></li>
+      </ul>
+    </li>
+    <li>Use <strong>“Salvar rascunho”</strong> para salvamento parcial (edição livre pelo gestor).</li>
+    <li>Use <strong>“Salvar definitivo”</strong> para travar todos os indicadores completos em rascunho do gestor
+        (somente o ADMIN poderá liberar para nova edição).</li>
+  </ol>
+  <p>
+    Após o salvamento definitivo, os dados passam a ser usados como base oficial para relatórios e monitoramento.
+  </p>
+</div>
+
+<div class="box">
+  <h2>2. Aba “ADMIN”</h2>
+  <p>Somente pessoas com a senha do ADMIN podem cadastrar e manter a estrutura do sistema.</p>
+  <ol>
+    <li>Informe a senha no campo <strong>“Senha do ADMIN”</strong> e clique em <strong>“Entrar / Revalidar senha”</strong>.</li>
+    <li>Cadastre:
+      <ul>
+        <li><strong>Gestores responsáveis</strong></li>
+        <li><strong>Perspectivas</strong> (ex.: Financeira, Clientes, Processos, Pessoas, etc.)</li>
+        <li><strong>Objetivos estratégicos</strong> vinculados à perspectiva e ao gestor</li>
+        <li><strong>Indicadores</strong> vinculados a cada objetivo estratégico</li>
+      </ul>
+    </li>
+    <li>Na tabela de indicadores, o ADMIN pode:
+      <ul>
+        <li>Editar o <strong>nome do indicador</strong></li>
+        <li><strong>Excluir</strong> indicadores (desde que não estejam em uso por metas ou outros controles internos do usuário)</li>
+        <li><strong>Liberar edição</strong> de indicadores que estejam como “Definitivos”</li>
+      </ul>
+    </li>
+    <li>Na tabela de <strong>Metas dos Indicadores (ADMIN)</strong>, o ADMIN pode:
+      <ul>
+        <li>Visualizar todas as metas cadastradas (por perspectiva, objetivo, indicador, gestor e ano)</li>
+        <li><strong>Excluir metas</strong> cadastradas, caso seja necessário refazer o cadastro</li>
+        <li><strong>Liberar edição</strong> de metas definitivas, retornando-as ao status de rascunho para novo ajuste pelo gestor</li>
+      </ul>
+    </li>
+    <li>Ao concluir a configuração inicial, usar o botão <strong>“Validar cadastro”</strong> para encerrar a sessão de administração.</li>
+  </ol>
+</div>
+
+<div class="box">
+  <h2>3. Aba “METAS” – Cadastro de Metas dos Indicadores</h2>
+  <p>
+    Nesta aba, os gestores registram as metas do indicador para um ano de monitoramento, definem o tipo de cálculo,
+    as faixas de gestão à vista e os valores de referência dos últimos anos.
+  </p>
+  <h3>3.1. Passo a passo para cadastrar ou editar metas</h3>
+  <ol>
+    <li>Selecione o seu nome em <strong>“Nome do Gestor Responsável”</strong>.</li>
+    <li>Localize o indicador desejado na tabela e clique em <strong>“Cadastrar / Editar metas”</strong>.</li>
+    <li>Preencha:
+      <ul>
+        <li><strong>Ano de monitoramento (ano das metas)</strong> – Ex.: 2026.</li>
+        <li><strong>Metas mensais</strong> de janeiro a dezembro, respeitando a unidade de medida do indicador
+            (número, %, R$, etc.).</li>
+        <li><strong>Tipo de cálculo</strong>:
+          <ul>
+            <li><strong>Indicador Mensal (mês isolado)</strong> – analisa apenas o valor daquele mês.</li>
+            <li><strong>Indicador Acumulado (YTD – soma)</strong> – soma os resultados de janeiro até o mês corrente.</li>
+            <li><strong>Indicador Acumulado (YTD – média)</strong> – calcula a média dos resultados de janeiro até o mês corrente.</li>
+          </ul>
+        </li>
+        <li><strong>Faixas de gestão à vista (% de atingimento da meta)</strong>:
+          <ul>
+            <li><strong>Azul</strong>: de X até Y</li>
+            <li><strong>Verde</strong>: de X até Y</li>
+            <li><strong>Amarelo</strong>: de X até Y</li>
+            <li><strong>Vermelho</strong>: abaixo de X</li>
+          </ul>
+          As faixas devem ser <strong>crescente e sem sobreposição</strong>, para garantir leitura visual consistente.
+        </li>
+        <li><strong>Valores de referência (últimos 3 anos)</strong> – opção para informar os valores realizados do indicador
+            nos três anos anteriores ao ano de monitoramento. Estes valores são usados para contextualizar as metas.</li>
+      </ul>
+    </li>
+    <li>Use <strong>“Salvar rascunho de metas”</strong> enquanto ainda estiver ajustando os valores.</li>
+    <li>Use <strong>“SALVAR DEFINITIVO DAS METAS”</strong> quando estiver seguro de que as metas estão consolidadas:
+      <ul>
+        <li>As metas passam ao status <strong>“Definitiva”</strong>.</li>
+        <li>A edição fica bloqueada para o gestor.</li>
+        <li>Apenas o <strong>ADMIN</strong> poderá liberar novamente para edição ou excluir a meta.</li>
+      </ul>
+    </li>
+  </ol>
+
+  <h3>3.2. Relatório de metas e exportação</h3>
+  <p>No final da aba METAS há um relatório consolidado das metas cadastradas.</p>
+  <ul>
+    <li>Filtros por <strong>Perspectiva</strong>, <strong>Objetivo Estratégico</strong> e <strong>Indicador</strong>.</li>
+    <li>Botão <strong>“Imprimir / Exportar PDF”</strong> – utilize a opção “Salvar como PDF” do navegador.</li>
+    <li>Botão <strong>“Exportar metas para Excel (CSV)”</strong> – gera arquivo CSV em <strong>UTF-8 com BOM</strong>, garantindo
+        a correta exibição de acentuação no Excel.</li>
+  </ul>
+</div>
+
+<div class="box">
+  <h2>4. Aba “ORIENTAÇÕES”</h2>
+  <p>
+    Apresenta os conceitos básicos utilizados na ficha de indicadores:
+    perspectiva, objetivo estratégico, indicador de desempenho, descrição operacional, fórmula,
+    unidade de medida, fonte de dados, periodicidade e polaridade.
+  </p>
+  <p>
+    Recomenda-se a leitura desta aba antes do preenchimento inicial dos indicadores, para assegurar
+    consistência conceitual em toda a organização.
+  </p>
+</div>
+
+<div class="box">
+  <h2>5. Aba “RESULTADOS”</h2>
+  <p>
+    Apresenta um relatório consolidado com todos os indicadores cadastrados, incluindo:
+    perspectiva, objetivo estratégico, nome do indicador, descrição operacional, fórmula, unidade,
+    fonte de dados, periodicidade, polaridade, gestor responsável e status (rascunho ou definitivo).
+  </p>
+  <ul>
+    <li>Filtros por <strong>Perspectiva</strong> e <strong>Objetivo Estratégico</strong>.</li>
+    <li>Botão <strong>“Imprimir relatório”</strong> – pode ser usado para gerar PDF, via opção “Salvar como PDF”.</li>
+    <li>Botão <strong>“Exportar para Excel (CSV)”</strong> – exporta os dados dos indicadores em formato compatível
+        com o Excel, preservando acentuação.</li>
+  </ul>
+</div>
+
+<div class="box">
+  <h2>6. Boas práticas de uso</h2>
+  <ul>
+    <li>Centralizar o cadastro estrutural de perspectivas, objetivos, indicadores e metas sob responsabilidade do <strong>ADMIN</strong>.</li>
+    <li>Orientar os gestores a utilizarem sempre o <strong>Salvar rascunho</strong> enquanto estiverem testando ou calibrando indicadores e metas.</li>
+    <li>Utilizar o <strong>Salvar definitivo</strong> apenas após validação dos dados em fóruns de governança (comitês, reuniões de diretoria, etc.).</li>
+    <li>Guardar a senha do ADMIN em local seguro e prever política de troca periódica.</li>
+    <li>Exportar periodicamente os dados para arquivos externos (CSV/PDF) para fins de backup e prestação de contas.</li>
+  </ul>
+</div>
+
+</body>
+</html>
