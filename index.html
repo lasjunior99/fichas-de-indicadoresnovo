@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Sistema de Indicadores – Distribuído</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: #f7f7f7;
+    }
+    header {
+        background: #003366;
+        color: white;
+        padding: 14px;
+        text-align: center;
+        font-size: 22px;
+        font-weight: bold;
+    }
+    .menuBar {
+        background: #eAEAEA;
+        padding: 10px;
+        display: flex;
+        gap: 12px;
+        border-bottom: 1px solid #ccc;
+    }
+    .menuButton {
+        background: #003366;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        border: none;
+    }
+    .menuButton:hover { background: #0055AA; }
+    .section {
+        display: none;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        margin: 20px;
+        box-shadow: 0 0 6px rgba(0,0,0,0.1);
+    }
+    input, select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 8px;
+        margin-bottom: 14px;
+        border: 1px solid #999;
+        border-radius: 6px;
+    }
+    button.saveButton {
+        background: #008800;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        border: none;
+        margin-bottom: 10px;
+    }
+    button.deleteButton {
+        background: #bb0000;
+        color: white;
+        padding: 6px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        border: none;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 14px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+    th { background: #eee; }
+</style>
+</head>
+
+<body>
+
+<header>Sistema de Indicadores – Distribuído</header>
+
+<div class="menuBar">
+    <button class="menuButton" onclick="showSection('secPerspectivas')">Perspectivas</button>
+    <button class="menuButton" onclick="showSection('secObjetivos')">Objetivos</button>
+    <button class="menuButton" onclick="showSection('secIndicadores')">Indicadores</button>
+    <button class="menuButton" onclick="showSection('secMetas')">Metas</button>
+    <button class="menuButton" onclick="showSection('secResultados')">Resultados</button>
+    <button class="menuButton" onclick="showSection('secAdmin')">Admin</button>
+    <button class="menuButton" onclick="logout()">Sair</button>
+</div>
+
+<!-- ----------------------------------------------------------
+     SEÇÃO – PERSPECTIVAS
+------------------------------------------------------------- -->
+<div id="secPerspectivas" class="section">
+    <h2>Perspectivas</h2>
+
+    <input id="perspNome" placeholder="Nome da Perspectiva">
+    <button class="saveButton" onclick="salvarPerspectiva()">Salvar</button>
+
+    <table id="tabelaPersp"></table>
+</div>
+
+<!-- ----------------------------------------------------------
+     SEÇÃO – OBJETIVOS
+------------------------------------------------------------- -->
+<div id="secObjetivos" class="section">
+    <h2>Objetivos</h2>
+
+    <label>Perspectiva</label>
+    <select id="objPersp"></select>
+
+    <label>Objetivo</label>
+    <input id="objNome" placeholder="Nome do Objetivo">
+
+    <button class="saveButton" onclick="salvarObjetivo()">Salvar</button>
+
+    <table id="tabelaObj"></table>
+</div>
+
+<!-- ----------------------------------------------------------
+     SEÇÃO – INDICADORES
+------------------------------------------------------------- -->
+<div id="secIndicadores" class="section">
+    <h2>Indicadores</h2>
+
+    <label>Objetivo</label>
+    <select id="indObjetivo"></select>
+
+    <label>Indicador</label>
+    <input id="indNome" placeholder="Nome do indicador">
+
+    <label>Unidade</label>
+    <input id="indUnidade" placeholder="Ex.: %, R$, número">
+
+    <button class="saveButton" onclick="salvarIndicador()">Salvar</button>
+
+    <table id="tabelaIndic"></table>
+</div>
+
+<!-- ----------------------------------------------------------
+     SEÇÃO – METAS
+------------------------------------------------------------- -->
+<div id="secMetas" class="section">
+    <h2>Metas</h2>
+
+    <label>Indicador</label>
+    <select id="metaIndicador"></select>
+
+    <label>Ano</label>
+    <input id="metaAno" type="number">
+
+    <label>Valor da Meta</label>
+    <input id="metaValor" type="number">
+
+    <button class="saveButton" onclick="salvarMeta()">Salvar</button>
+
+    <table id="tabelaMetas"></table>
+</div>
+
+<!-- ----------------------------------------------------------
+     SEÇÃO – RESULTADOS
+------------------------------------------------------------- -->
+<div id="secResultados" class="section">
+    <h2>Resultados</h2>
+
+    <label>Indicador</label>
+    <select id="resIndicador"></select>
+
+    <label>Ano</label>
+    <input id="resAno" type="number">
+
+    <label>Mês</label>
+    <input id="resMes" type="number" min="1" max="12">
+
+    <label>Valor</label>
+    <input id="resValor" type="number">
+
+    <button class="saveButton" onclick="salvarResultado()">Salvar</button>
+
+    <table id="tabelaResultados"></table>
+</div>
+
+<!-- ----------------------------------------------------------
+     SEÇÃO – ADMIN (LISTA DE USUÁRIOS)
+------------------------------------------------------------- -->
+<div id="secAdmin" class="section">
+    <h2>Administração de Usuários</h2>
+    <p>Lista de usuários cadastrados no sistema</p>
+
+    <div id="listaUsuarios"></div>
+</div>
+
+<!-- ========================================================
+     SCRIPTS FIREBASE – auth.js + db.js
+========================================================= -->
+<script type="module" src="auth.js"></script>
+<script type="module">
+
+import { db } from "./db.js";
+import { 
+    collection, addDoc, updateDoc, deleteDoc, doc,
+    onSnapshot, query
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+window.showSection = function(sec){
+    document.querySelectorAll(".section").forEach(s => s.style.display = "none");
+    document.getElementById(sec).style.display = "block";
+};
+
+/* ======================================================
+   CRUD – PERSPECTIVAS
+====================================================== */
+
+window.salvarPerspectiva = async function () {
+    const nome = document.getElementById("perspNome").value;
+    if (!nome) return alert("Informe o nome");
+
+    await addDoc(collection(db,"perspectivas"),{
+        nome,
+        criadoEm: new Date()
+    });
+
+    document.getElementById("perspNome").value = "";
+};
+
+onSnapshot(collection(db,"perspectivas"),(snap)=>{
+    let html = "<tr><th>Nome</th><th>Ações</th></tr>";
+    let options = "";
+
+    snap.forEach(docu=>{
+        let d = docu.data();
+        options += `<option value="${docu.id}">${d.nome}</option>`;
+        html += `
+            <tr>
+                <td>${d.nome}</td>
+                <td><button class="deleteButton" onclick="excluirPersp('${docu.id}')">Excluir</button></td>
+            </tr>
+        `;
+    });
+
+    document.getElementById("tabelaPersp").innerHTML = html;
+    document.getElementById("objPersp").innerHTML = options;
+});
+
+window.excluirPersp = async function(id){
+    await deleteDoc(doc(db,"perspectivas",id));
+};
+
+
+/* ======================================================
+   CRUD – OBJETIVOS
+====================================================== */
+
+window.salvarObjetivo = async function(){
+    const nome = document.getElementById("objNome").value;
+    const perspectivaId = document.getElementById("objPersp").value;
+
+    if(!nome) return alert("Informe o nome");
+
+    await addDoc(collection(db,"objetivos"),{
+        nome,
+        perspectivaId,
+        criadoEm: new Date()
+    });
+
+    document.getElementById("objNome").value = "";
+};
+
+onSnapshot(collection(db,"objetivos"),(snap)=>{
+    let html = "<tr><th>Objetivo</th><th>Perspectiva</th><th>Ações</th></tr>";
+    let options = "";
+
+    snap.forEach(docu=>{
+        const d = docu.data();
+        options += `<option value="${docu.id}">${d.nome}</option>`;
+        html += `
+            <tr>
+                <td>${d.nome}</td>
+                <td>${d.perspectivaId}</td>
+                <td><button class="deleteButton" onclick="excluirObj('${docu.id}')">Excluir</button></td>
+            </tr>
+        `;
+    });
+
+    document.getElementById("tabelaObj").innerHTML = html;
+    document.getElementById("indObjetivo").innerHTML = options;
+});
+
+window.excluirObj = async function(id){
+    await deleteDoc(doc(db,"objetivos",id));
+};
+
+
+/* ======================================================
+   CRUD – INDICADORES
+====================================================== */
+
+window.salvarIndicador = async function(){
+    const nome = document.getElementById("indNome").value;
+    const objetivoId = document.getElementById("indObjetivo").value;
+    const unidade = document.getElementById("indUnidade").value;
+
+    await addDoc(collection(db,"indicadores"),{
+        nome,
+        objetivoId,
+        unidade,
+        criadoEm: new Date()
+    });
+
+    document.getElementById("indNome").value = "";
+    document.getElementById("indUnidade").value = "";
+};
+
+onSnapshot(collection(db,"indicadores"),(snap)=>{
+    let html = "<tr><th>Nome</th><th>Unidade</th><th>Objetivo</th><th>Ações</th></tr>";
+    let options = "";
+
+    snap.forEach(docu=>{
+        const d = docu.data();
+        options += `<option value="${docu.id}">${d.nome}</option>`;
+        html += `
+            <tr>
+                <td>${d.nome}</td>
+                <td>${d.unidade}</td>
+                <td>${d.objetivoId}</td>
+                <td><button class="deleteButton" onclick="excluirInd('${docu.id}')">Excluir</button></td>
+            </tr>
+        `;
+    });
+
+    document.getElementById("tabelaIndic").innerHTML = html;
+    document.getElementById("metaIndicador").innerHTML = options;
+    document.getElementById("resIndicador").innerHTML = options;
+});
+
+window.excluirInd = async function(id){
+    await deleteDoc(doc(db,"indicadores",id));
+};
+
+
+/* ======================================================
+   CRUD – METAS
+====================================================== */
+
+window.salvarMeta = async function(){
+    const indicadorId = document.getElementById("metaIndicador").value;
+    const ano = parseInt(document.getElementById("metaAno").value);
+    const valor = parseFloat(document.getElementById("metaValor").value);
+
+    await addDoc(collection(db,"metas"),{
+        indicadorId, ano, valor,
+        criadoEm: new Date()
+    });
+};
+
+onSnapshot(collection(db,"metas"),(snap)=>{
+    let html = "<tr><th>Indicador</th><th>Ano</th><th>Meta</th><th>Ações</th></tr>";
+
+    snap.forEach(docu=>{
+        const d = docu.data();
+        html += `
+            <tr>
+                <td>${d.indicadorId}</td>
+                <td>${d.ano}</td>
+                <td>${d.valor}</td>
+                <td><button class="deleteButton" onclick="excluirMeta('${docu.id}')">Excluir</button></td>
+            </tr>
+        `;
+    });
+
+    document.getElementById("tabelaMetas").innerHTML = html;
+});
+
+window.excluirMeta = async function(id){
+    await deleteDoc(doc(db,"metas",id));
+};
+
+
+/* ======================================================
+   CRUD – RESULTADOS
+====================================================== */
+
+window.salvarResultado = async function(){
+    const indicadorId = document.getElementById("resIndicador").value;
+    const ano = parseInt(document.getElementById("resAno").value);
+    const mes = parseInt(document.getElementById("resMes").value);
+    const valor = parseFloat(document.getElementById("resValor").value);
+
+    await addDoc(collection(db,"resultados"),{
+        indicadorId, ano, mes, valor,
+        criadoEm: new Date()
+    });
+};
+
+onSnapshot(collection(db,"resultados"),(snap)=>{
+    let html = "<tr><th>Indicador</th><th>Ano</th><th>Mês</th><th>Valor</th><th>Ações</th></tr>";
+
+    snap.forEach(docu=>{
+        const d = docu.data();
+        html += `
+            <tr>
+                <td>${d.indicadorId}</td>
+                <td>${d.ano}</td>
+                <td>${d.mes}</td>
+                <td>${d.valor}</td>
+                <td><button class="deleteButton" onclick="excluirRes('${docu.id}')">Excluir</button></td>
+            </tr>
+        `;
+    });
+
+    document.getElementById("tabelaResultados").innerHTML = html;
+});
+
+window.excluirRes = async function(id){
+    await deleteDoc(doc(db,"resultados",id));
+};
+
+
+/* ======================================================
+   ADMIN – LISTA DE USUÁRIOS
+====================================================== */
+
+import { getDocs } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+async function carregarUsuarios(){
+    const snap = await getDocs(collection(db,"usuarios"));
+    let html = "<table><tr><th>Nome</th><th>Email</th><th>Tipo</th></tr>";
+
+    snap.forEach(docu=>{
+        const d = docu.data();
+        html += `
+            <tr>
+                <td>${d.nome ?? "-"}</td>
+                <td>${d.email}</td>
+                <td>${d.tipo ?? "-"}</td>
+            </tr>
+        `;
+    });
+
+    html += "</table>";
+    document.getElementById("listaUsuarios").innerHTML = html;
+}
+window.carregarUsuarios = carregarUsuarios;
+
+showSection('secPerspectivas');
+carregarUsuarios();
+
+</script>
+
+</body>
+</html>
